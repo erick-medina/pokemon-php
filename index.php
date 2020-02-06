@@ -50,6 +50,8 @@ for ($x = 0; $x < 4; $x++) {
     array_push($array_moves, $result_array['moves'][$random_moves]['move']['name']);
 }
 
+// evolutions
+
 $evolution_url = 'https://pokeapi.co/api/v2/pokemon-species/' . $pokenameGet;
 $evolution_json = file_get_contents($evolution_url);
 $result_evolution = json_decode($evolution_json , true);
@@ -61,6 +63,9 @@ $evolution_new_json = file_get_contents($evolution_url_sprite);
 $result_evolution_sprite = json_decode($evolution_new_json , true);
 
 $previous_evo_name = $result_evolution_sprite['sprites']['front_default']; // to get previous poke evo image
+
+
+
 
 /*
 
@@ -129,7 +134,7 @@ function urlFunc($species_url) {
 <section>
     <p id="prevEvolution"><strong>Previous evolution: </strong><?php echo $previous_evolution_name ?></p>
     <img src="<?php echo $previous_evo_name ?>" alt="" id="evoImg"/>
-    <img src="<?php echo $evo_pic_poke ?>" alt="" id="pokeImg"/>
+    <img src="<?php echo $poke_main_pic ?>" alt="" id="pokeImg"/>
 
 </section>
 </body>
