@@ -1,8 +1,23 @@
 <?php
-// getting API
-$_GET['pokemon'];
+declare(strict_types = 1);
 
-$poke_url = 'https://pokeapi.co/api/v2/pokemon/' . $_GET['pokemon']; // Pokemon API url + search
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
+// getting API
+
+if (isset($_GET['pokemon']))
+{
+    $pokenameGet = $_GET['pokemon'];
+}
+else
+{
+    $pokenameGet = 151;
+}
+
+
+$poke_url = 'https://pokeapi.co/api/v2/pokemon/' . $pokenameGet; // Pokemon API url + search
 $poke_json = file_get_contents($poke_url); // to get data from API
 $result_array = json_decode($poke_json , true); // 'true' converts objects into associative arrays
 //var_dump($result_array);
@@ -12,7 +27,7 @@ $poke_id = $result_array['id']; // ID variable
 
 // Main pic poke variable
 $poke_main_pic = $result_array['sprites']['front_default'];
-echo "<img src='{$poke_main_pic}'";
+//echo "<img src='{$poke_main_pic}'";
 
 $poke_weight = $result_array['weight']; // weight variable
 
@@ -29,12 +44,55 @@ $poke_abilities = $array_abilities[$random_abilities];
 // poke moves
 
 $array_moves = array();
-
+$array_count_moves = count($result_array['moves']);
 for ($x = 0; $x < 4; $x++) {
-    array_push($array_moves, $result_array['moves'][$x]['move']['name']);
- //   $random_moves = array_rand($array_moves); I NEED TO MAKE A RANDOM ARRAY
+    $random_moves = rand(0, $array_count_moves);
+    array_push($array_moves, $result_array['moves'][$random_moves]['move']['name']);
 }
-//$poke_random_moves = $array_moves[$random_moves];
+
+$evolution_url = 'https://pokeapi.co/api/v2/pokemon-species/' . $pokenameGet;
+$evolution_json = file_get_contents($evolution_url);
+$result_evolution = json_decode($evolution_json , true);
+
+$previous_evolution_name = $result_evolution['evolves_from_species']['name']; // to get name of the previous evolution
+
+$evolution_url_sprite = 'https://pokeapi.co/api/v2/pokemon/' . $previous_evolution_name;
+$evolution_new_json = file_get_contents($evolution_url_sprite);
+$result_evolution_sprite = json_decode($evolution_new_json , true);
+
+$previous_evo_name = $result_evolution_sprite['sprites']['front_default']; // to get previous poke evo image
+
+/*
+
+$species_url = $result_array['species']['url'];
+$evo_pic_poke = urlFunc($species_url);
+
+function urlFunc($species_url) {
+    $evolution_json = file_get_contents($species_url);
+    $evolution_array = json_decode($evolution_json, true);
+
+    if ($evolution_array['evolves_from_species'] != null) {
+
+        $previous_evolution_name = ucfirst(strtolower($evolution_array['evolves_from_species']['name']));
+        $evo_url = 'https://pokeapi.co/api/v2/pokemon/'. $previous_evolution_name; // Pokemon API url + search
+        $evo_poke_json = file_get_contents($evo_url); // to get data from API
+        $result_evolution = json_decode($evo_poke_json , true); // 'true' converts objects into associative arrays
+
+        $evo_main_pic = $result_evolution['sprites']['front_default'];
+        echo $result_evolution['name'];
+        //$evo_pic_poke = "<img src='{$evo_main_pic}'";
+        echo "here";
+        echo $evo_main_pic;
+        return $evo_main_pic;
+        //echo $evolution_array;
+    } else {
+        echo 'There is just one evolution';
+    }
+}
+
+//$evolution_link = 'https://pokeapi.co/api/v2/pokemon-species/' . $_GET['pokemon'];
+
+*/
 
 
 ?>
@@ -50,10 +108,12 @@ for ($x = 0; $x < 4; $x++) {
 </head>
 <body>
 <section>
-    <form name="form" action="" method="get">
-        <input type="text" name="pokemon" id="poke-input" placeholder="Type your favorite pokemon">
-        <button type="submit" name="">Click here</button>
-    </form>
+    <div id="ask">
+        <form name="form" action="" method="get">
+            <input type="text" name="pokemon" id="poke-input" placeholder="Type your favorite pokemon">
+            <button type="submit" name="">Click here</button>
+        </form>
+    </div>
 </section>
 <section>
     <img src="<?php echo $poke_main_pic ?>" alt="" id="shinyImg"/>
@@ -67,6 +127,9 @@ for ($x = 0; $x < 4; $x++) {
     <p id="pokeMove4"><?php echo $array_moves[3] ?></p>
 </section>
 <section>
+    <p id="prevEvolution"><strong>Previous evolution: </strong><?php echo $previous_evolution_name ?></p>
+    <img src="<?php echo $previous_evo_name ?>" alt="" id="evoImg"/>
+    <img src="<?php echo $evo_pic_poke ?>" alt="" id="pokeImg"/>
 
 </section>
 </body>
