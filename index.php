@@ -58,11 +58,17 @@ $result_evolution = json_decode($evolution_json , true);
 
 $previous_evolution_name = $result_evolution['evolves_from_species']['name']; // to get name of the previous evolution
 
-$evolution_url_sprite = 'https://pokeapi.co/api/v2/pokemon/' . $previous_evolution_name;
-$evolution_new_json = file_get_contents($evolution_url_sprite);
-$result_evolution_sprite = json_decode($evolution_new_json , true);
+if ($previous_evolution_name === null) {
+    $previous_evolution_name = 'none';
+} else {
+    $previous_evolution_name = $result_evolution['evolves_from_species']['name']; // to get name of the previous evolution
+    $evolution_url_sprite = 'https://pokeapi.co/api/v2/pokemon/' . $previous_evolution_name;
+    $evolution_new_json = file_get_contents($evolution_url_sprite);
+    $result_evolution_sprite = json_decode($evolution_new_json , true);
 
-$previous_evo_name = $result_evolution_sprite['sprites']['front_default']; // to get previous poke evo image
+    $previous_evo_name = $result_evolution_sprite['sprites']['front_default']; // to get previous poke evo image
+}
+
 
 
 
