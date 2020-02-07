@@ -1,10 +1,4 @@
 <?php
-declare(strict_types = 1);
-
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 // getting API
 
 if (isset($_GET['pokemon']))
@@ -68,43 +62,6 @@ if ($previous_evolution_name === null) {
 
     $previous_evo_name = $result_evolution_sprite['sprites']['front_default']; // to get previous poke evo image
 }
-
-
-
-
-
-/*
-
-$species_url = $result_array['species']['url'];
-$evo_pic_poke = urlFunc($species_url);
-
-function urlFunc($species_url) {
-    $evolution_json = file_get_contents($species_url);
-    $evolution_array = json_decode($evolution_json, true);
-
-    if ($evolution_array['evolves_from_species'] != null) {
-
-        $previous_evolution_name = ucfirst(strtolower($evolution_array['evolves_from_species']['name']));
-        $evo_url = 'https://pokeapi.co/api/v2/pokemon/'. $previous_evolution_name; // Pokemon API url + search
-        $evo_poke_json = file_get_contents($evo_url); // to get data from API
-        $result_evolution = json_decode($evo_poke_json , true); // 'true' converts objects into associative arrays
-
-        $evo_main_pic = $result_evolution['sprites']['front_default'];
-        echo $result_evolution['name'];
-        //$evo_pic_poke = "<img src='{$evo_main_pic}'";
-        echo "here";
-        echo $evo_main_pic;
-        return $evo_main_pic;
-        //echo $evolution_array;
-    } else {
-        echo 'There is just one evolution';
-    }
-}
-
-//$evolution_link = 'https://pokeapi.co/api/v2/pokemon-species/' . $_GET['pokemon'];
-
-*/
-
 
 ?>
 <!doctype html>
